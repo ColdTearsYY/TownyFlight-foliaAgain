@@ -36,6 +36,9 @@ public class TownRemoveResidentListener implements Listener {
 	 * Check if the player is allowed to fly at their location.
 	 */
 	private void testPlayer(Player player) {
+		// 添加这一行 ↓  
+		TownyFlightAPI.getInstance().playersHandledByListener.remove(player.getUniqueId());  
+		  
 		if (!TownyFlightAPI.getInstance().canFly(player, true)) {
 			TownyFlightAPI.getInstance().removeFlight(player, false, true, "");
 		}

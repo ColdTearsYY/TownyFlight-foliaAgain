@@ -33,7 +33,8 @@ public class TownyFlightAPI {
 	public Set<Player> fallProtectedPlayers = ConcurrentHashMap.newKeySet();
 	private static Map<UUID, Boolean> canFlyCache = new ConcurrentHashMap<>();
 	private static NamespacedKey forceAllowFlight;
-	
+	public Set<UUID> playersHandledByListener = ConcurrentHashMap.newKeySet();
+
 	public TownyFlightAPI(TownyFlight plugin) {
 		TownyFlightAPI.plugin = plugin;
 		forceAllowFlight = new NamespacedKey(plugin, "force_allow_flight");
@@ -305,5 +306,14 @@ public class TownyFlightAPI {
 	
 	public static void removeCachedPlayer(Player player) {
 		canFlyCache.remove(player.getUniqueId());
+	}
+	/**  
+	 * 清理离线玩家的标记,防止内存泄漏  
+	 */  
+	public void cleanupOfflinePlayersFromHandledList() {  
+		playersHandledByListener.removeIf(uuid -> {  
+			Player player = Bukkit.getPlayer(uuid);  
+			return player == null || !player.isOnline();  
+		});  
 	}
 }

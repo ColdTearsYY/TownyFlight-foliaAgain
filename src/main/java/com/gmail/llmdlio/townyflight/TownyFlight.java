@@ -141,13 +141,15 @@ public class TownyFlight extends JavaPlugin {
 		new TownToggleFlightCommandAddon();
 	}
 
-	private void cycleTimerTasksOn() {
-		cycleTimerTasksOff();
-		TaskHandler.toggleTempFlightTask(true);
-	}
+	private void cycleTimerTasksOn() {  
+    	cycleTimerTasksOff();  
+   		TaskHandler.toggleTempFlightTask(true);  
+    	TaskHandler.toggleFlightValidationTask(true);  
+	}  
 
 	private void cycleTimerTasksOff() {
 		TaskHandler.toggleTempFlightTask(false);
+		TaskHandler.toggleFlightValidationTask(false);  
 	}
 
 	private void reGrantTempFlightToOnlinePlayer() {

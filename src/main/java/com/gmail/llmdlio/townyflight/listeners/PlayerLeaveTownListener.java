@@ -35,14 +35,23 @@ public class PlayerLeaveTownListener implements Listener {
 	 * If player has left the town borders into an area they cannot fly in, remove
 	 * their flight. Handles the flightDisableTimer if in use.
 	 */
-	private void executeLeaveTown(Player player) {
-		if (!TownyFlightAPI.getInstance().canFly(player, true)) {
-			if (Settings.flightDisableTimer < 1) {
-				TownyFlightAPI.getInstance().removeFlight(player, false, true, "");
-			} else {
-				Message.of(String.format(Message.getLangString("returnToAllowedArea"), Settings.flightDisableTimer)).serious().to(player);
-				plugin.getScheduler().runLater(player, () -> TownyFlightAPI.getInstance().testForFlight(player, true), Settings.flightDisableTimer * 20);
-			}
-		}
+	private void executeLeaveTown(Player player) {  
+		if (!TownyFlightAPI.getInstance().canFly(player, true)) {  
+			// 标记这个玩家正在被监听器处理  
+			TownyFlightAPI.getInstance().playersHandledByListener.add(player.getUniqueId());  
+			  
+			if (Settings.flightDisableTimer < 1) {  
+				TownyFlightAPI.getInstance().removeFlight(player, false, true, "");  
+				// 移除飞行后清除标记  
+				TownyFlightAPI.getInstance().playersHandledByListener.remove(player.getUniqueId());  
+			} else {  
+				Message.of(String.format(Message.getLangString("returnToAllowedArea"), Settings.flightDisableTimer)).serious().to(player);  
+				plugin.getScheduler().runLater(player, () -> {  
+					TownyFlightAPI.getInstance().testForFlight(player, true);  
+					// 宽限期结束后清除标记  
+					TownyFlightAPI.getInstance().playersHandledByListener.remove(player.getUniqueId());  
+				}, Settings.flightDisableTimer * 20);  
+			}  
+		}  
 	}
 }

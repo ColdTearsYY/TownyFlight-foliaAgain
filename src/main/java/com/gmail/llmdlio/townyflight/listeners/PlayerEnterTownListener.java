@@ -28,6 +28,9 @@ public class PlayerEnterTownListener implements Listener {
 	@EventHandler(priority = EventPriority.LOWEST)
 	private void playerEnterTownEvent(PlayerEntersIntoTownBorderEvent event) {
 		final Player player = event.getPlayer();
+		// 添加这一行 ↓  
+		TownyFlightAPI.getInstance().playersHandledByListener.remove(player.getUniqueId()); 
+
 		// Do nothing to players who are already flying.
 		if (player.getAllowFlight()) return;
 		

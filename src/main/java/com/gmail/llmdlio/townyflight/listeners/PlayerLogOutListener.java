@@ -9,10 +9,12 @@ import com.gmail.llmdlio.townyflight.tasks.TempFlightTask;
 
 public class PlayerLogOutListener implements Listener {
 
-	@EventHandler
-	public void onPlayerQuit(PlayerQuitEvent event) {
-		TownyFlightAPI.getInstance().testForFlight(event.getPlayer(), true);
-		TownyFlightAPI.removeCachedPlayer(event.getPlayer());
-		TempFlightTask.logOutPlayerWithRemainingTempFlight(event.getPlayer());
+	@EventHandler  
+	public void onPlayerQuit(PlayerQuitEvent event) {  
+		TownyFlightAPI.getInstance().testForFlight(event.getPlayer(), true);  
+		TownyFlightAPI.removeCachedPlayer(event.getPlayer());  
+		TempFlightTask.logOutPlayerWithRemainingTempFlight(event.getPlayer());  
+		// 添加这一行 ↓  
+		TownyFlightAPI.getInstance().playersHandledByListener.remove(event.getPlayer().getUniqueId());  
 	}
 }

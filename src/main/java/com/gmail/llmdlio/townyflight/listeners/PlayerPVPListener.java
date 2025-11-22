@@ -27,7 +27,9 @@ public class PlayerPVPListener implements Listener {
 			event.setCancelled(true);
 			return;
 		}
-
+		// 添加这一行 ↓  
+		TownyFlightAPI.getInstance().playersHandledByListener.remove(attackingPlayer.getUniqueId());  
+		
 		TownyFlightAPI.getInstance().removeFlight(attackingPlayer, false, true, "pvp");
 		event.setCancelled(true);
 	}
