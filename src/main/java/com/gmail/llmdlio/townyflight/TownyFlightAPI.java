@@ -196,6 +196,9 @@ public class TownyFlightAPI {
 				protectFromFall(player);
 		}
 		player.setAllowFlight(false);
+		// 清除 TownyFlight 管理标记  
+		NamespacedKey key = new NamespacedKey(plugin, "townyflight_managed");  
+		player.getPersistentDataContainer().remove(key);  
 		cachePlayerFlight(player, false);
 	}
 
@@ -205,10 +208,13 @@ public class TownyFlightAPI {
 	 * @param player {@link Player} who receives flight.
 	 * @param silent true will mean no message is shown to the {@link Player}.
 	 */
-	public void addFlight(Player player, boolean silent) {
-		if (!silent) Message.of("flightOnMsg").to(player);
-		player.setAllowFlight(true);
-		cachePlayerFlight(player, true);
+	public void addFlight(Player player, boolean silent) {  
+	if (!silent) Message.of("flightOnMsg").to(player);  
+	player.setAllowFlight(true);  
+	// 添加 TownyFlight 管理标记  
+	NamespacedKey key = new NamespacedKey(plugin, "townyflight_managed");  
+	player.getPersistentDataContainer().set(key, PersistentDataType.BYTE, (byte) 1);  
+	cachePlayerFlight(player, true);  
 	}
 
 	/**
