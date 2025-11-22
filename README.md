@@ -1,5 +1,7 @@
 # TownyFlight
 努力解决一些folia上的飞行问题 Strive to resolve some infinite flight issues on Folia.
+I will remove the releases as soon as possible. Respect the arthor!
+
 Finally, you can allow towny residents to fly while in their own towns, for free, from the lead developer of Towny.
 
 __As of version 1.5.0 This plugin supports Towny 0.94.0.2+ and MC 1.14.*.__
