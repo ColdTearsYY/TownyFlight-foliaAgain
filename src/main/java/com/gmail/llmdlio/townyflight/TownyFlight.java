@@ -50,13 +50,13 @@ public class TownyFlight extends JavaPlugin {
 
 		if (!loadSettings()) {
 			getLogger().severe("Config failed to load!");
-			disable();
+			getServer().getPluginManager().disablePlugin(this);
 			return;
 		}
 
 		if (!townyVersionCheck(townyVersion)) {
 			getLogger().severe("Towny version does not meet required version: " + requiredTownyVersion.toString());
-			disable();
+			getServer().getPluginManager().disablePlugin(this);
 			return;
 		}
 
@@ -71,6 +71,14 @@ public class TownyFlight extends JavaPlugin {
 		reGrantTempFlightToOnlinePlayer();
 	}
 
+	@Override
+	public void onDisable() {
+		cycleTimerTasksOff();
+		com.gmail.llmdlio.townyflight.tasks.FlightValidationTask.clear();
+		unregisterEvents();
+		getLogger().info("TownyFlight Disabled.");
+	}
+
 	public static TownyFlight getPlugin() {
 		return plugin;
 	}
@@ -80,11 +88,6 @@ public class TownyFlight extends JavaPlugin {
 	 */
 	public static TownyFlightAPI getAPI() {
 		return api;
-	}
-
-	private void disable() {
-		unregisterEvents();
-		getLogger().severe("TownyFlight Disabled.");
 	}
 
 	public boolean loadSettings() {
@@ -124,10 +127,11 @@ public class TownyFlight extends JavaPlugin {
 		pm.registerEvents(new TownRemoveResidentListener(this), this);
 		pm.registerEvents(new TownUnclaimListener(this), this);
 		pm.registerEvents(new PlayerFallListener(), this);
-		pm.registerEvents(new PlayerTeleportListener(), this);
+		if (!isFoliaClassPresent()) {
+			pm.registerEvents(new PlayerTeleportListener(), this);
+		}
 		pm.registerEvents(new TownStatusScreenListener(), this);
 		pm.registerEvents(new PlayerEnterTownListener(this), this);
-
 		if (Settings.disableCombatPrevention)
 			pm.registerEvents(new PlayerPVPListener(), this);
 	}

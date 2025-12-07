@@ -30,8 +30,8 @@ public class TaskHandler {
 		if (on && !isFlightValidationTaskRunning()) {  
 			if (flightValidationRunnable == null)  
 				flightValidationRunnable = new FlightValidationTask();  
-			// 40L = 2秒检查一次,如需改为5秒则改为100L  
-			flightValidationTask = TownyFlight.getPlugin().getScheduler().runRepeating(flightValidationRunnable, 80L, 80L);  
+			// 改为 20L (1秒) 以确保及时检测到传送
+			flightValidationTask = TownyFlight.getPlugin().getScheduler().runRepeating(flightValidationRunnable, 20L, 20L);  
 		} else if (!on && isFlightValidationTaskRunning()) {  
 			flightValidationTask.cancel();  
 			flightValidationTask = null;  

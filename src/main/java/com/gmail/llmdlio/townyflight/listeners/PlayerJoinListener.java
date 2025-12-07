@@ -33,7 +33,7 @@ public class PlayerJoinListener implements Listener {
 				TempFlightTask.addPlayerTempFlightSeconds(player.getUniqueId(), seconds);
 
 			boolean canFly = TownyFlightAPI.getInstance().canFly(player, true);
-			boolean isFlying = player.isFlying();
+			boolean isFlying = player.getAllowFlight();
 			if (isFlying && canFly)
 				return;
 
