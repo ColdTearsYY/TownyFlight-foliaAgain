@@ -64,7 +64,8 @@ public class FlightValidationTask implements Runnable {
 							long timeSinceLastValidation = System.currentTimeMillis()
 									- lastValidationTime.getOrDefault(player.getUniqueId(), 0L);
 							boolean sameWorld = lastLoc.getWorld().equals(currentLoc.getWorld());
-							boolean longDistance = sameWorld && lastLoc.distanceSquared(currentLoc) > 40000; // 200格
+							// 降低阈值到 5 格 (25)，以捕获任何显著移动（包括普通飞行和鞘翅）
+							boolean longDistance = sameWorld && lastLoc.distanceSquared(currentLoc) > 25; 
 
 							if ((!sameWorld || longDistance) && timeSinceLastValidation > 1000) { // 至少1秒间隔
 								isTeleport = true;
@@ -73,8 +74,13 @@ public class FlightValidationTask implements Runnable {
 						}
 						lastLocationMap.put(player.getUniqueId(), currentLoc);
 
+						// 检查是否由 TownyFlight 管理
+						NamespacedKey key = new NamespacedKey(TownyFlight.getPlugin(), "townyflight_managed");
+						boolean isManagedByTownyFlight = player.getPersistentDataContainer()
+								.getOrDefault(key, PersistentDataType.BYTE, (byte) 0) == 1;
+
 						if (isTeleport) {
-							if (currentlyFlying) {
+							if (currentlyFlying && isManagedByTownyFlight) {
 								// 如果有临时飞行，不处理
 								if (TempFlightTask.getSeconds(player.getUniqueId()) > 0L) {
 									return;
@@ -84,11 +90,6 @@ public class FlightValidationTask implements Runnable {
 								}
 							}
 						}
-
-						// 检查是否由 TownyFlight 管理
-						NamespacedKey key = new NamespacedKey(TownyFlight.getPlugin(), "townyflight_managed");
-						boolean isManagedByTownyFlight = player.getPersistentDataContainer()
-								.getOrDefault(key, PersistentDataType.BYTE, (byte) 0) == 1;
 
 						boolean shouldFly = TownyFlightAPI.allowedLocation(player, player.getLocation(), resident);
 

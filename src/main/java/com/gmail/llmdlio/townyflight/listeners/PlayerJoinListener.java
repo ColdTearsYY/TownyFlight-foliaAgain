@@ -42,8 +42,11 @@ public class PlayerJoinListener implements Listener {
 				return;
 			}
 
-			if (!isFlying && canFly && Settings.autoEnableFlight)
-				TownyFlightAPI.getInstance().addFlight(player, false);
+			if (!isFlying && canFly && Settings.autoEnableFlight) {
+				if (!player.isGliding()) {
+					TownyFlightAPI.getInstance().addFlight(player, false);
+				}
+			}
 
 			TownyFlightAPI.cachePlayerFlight(player, canFly);
 		}, 1);
